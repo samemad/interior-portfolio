@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Luxury tweaks */
+:root {
+  --gold: #d4af37;
+}
+html, body, #root {
+  height: 100%;
+  background: #0b0b0f;
+}
+/* Hide horizontal scrollbar for modern browsers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
