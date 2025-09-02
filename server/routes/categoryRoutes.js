@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require("../config/db");
 const { getCategories, getCategoryById } = require("../controllers/categoryController");
 const { upload, uploadToCloudinary, deleteFromCloudinary } = require("../middleware/cloudinaryUpload");
+const upload = require("../middleware/cloudinaryUpload");
 
 // Helper function to extract Cloudinary public ID from URL
 const getPublicIdFromUrl = (url) => {
