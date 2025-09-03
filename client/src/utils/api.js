@@ -1,5 +1,5 @@
 // client/src/utils/api.js
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://interior-portfolio-api.onrender.com/api";
 
 // ✅ Get all categories
 export async function fetchCategories() {

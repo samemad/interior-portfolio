@@ -8,6 +8,12 @@ const CategoryCard = ({ item }) => {
     threshold: 0.2,
   });
 
+  // helper: handle both relative and full URLs
+  const toUrl = (p) => {
+    if (!p) return null;
+    return p.startsWith("http") ? p : `https://interior-portfolio-api.onrender.com${p}`;
+  };
+
   return (
     <Link
       to={`/category/${item.id}`}
@@ -19,16 +25,10 @@ const CategoryCard = ({ item }) => {
       <div
         className="aspect-[16/10] bg-center bg-cover"
         style={{
-          backgroundImage: `url(${
-            item.cover_image
-              ? `http://localhost:5000${item.cover_image}`
-              : "/placeholder.jpg"
-          })`,
+          backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
         }}
       />
-
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-
       <div className="absolute bottom-4 left-4">
         <h3 className="text-xl md:text-3xl font-medium group-hover:text-luxuryGold transition-colors duration-300">
           {item.name}
@@ -37,5 +37,6 @@ const CategoryCard = ({ item }) => {
     </Link>
   );
 };
+
 
 export default CategoryCard;

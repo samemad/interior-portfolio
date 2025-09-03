@@ -11,7 +11,7 @@ export default function AdminDashboard() {
   // helper to produce full URL (works if backend returns "/uploads/..." or full "http...")
   const toUrl = (p) => {
     if (!p) return null;
-    return p.startsWith("http") ? p : `http://localhost:5000${p}`;
+    return p.startsWith("http") ? p : `https://interior-portfolio-api.onrender.com${p}`;
   };
 
   // ===== Tabs =====
@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   // ===== Fetch data =====
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/categories");
+      const res = await fetch("https://interior-portfolio-api.onrender.com/api/categories");
       const data = await res.json();
       // normalize cover path if needed (keep relative "/uploads/..." or full URL)
       const normalized = data.map(c => ({
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
 
   const fetchProjects = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/projects");
+    const res = await fetch("https://interior-portfolio-api.onrender.com/api/projects");
     const data = await res.json();
 
     const normalized = data.map(p => {
@@ -95,8 +95,9 @@ export default function AdminDashboard() {
       if (categoryForm.cover) formData.append("cover", categoryForm.cover);
 
       const url = categoryForm.id
-        ? `http://localhost:5000/api/categories/${categoryForm.id}`
-        : "http://localhost:5000/api/categories";
+        ? `https://interior-portfolio-api.onrender.com/api/categories/${categoryForm.id}`
+        : "https://interior-portfolio-api.onrender.com/api/categories";
+
       const method = categoryForm.id ? "PUT" : "POST";
 
       const res = await fetch(url, { method, body: formData });
@@ -123,7 +124,7 @@ export default function AdminDashboard() {
   const handleDeleteCategory = async (id) => {
     if (!window.confirm("Delete this category?")) return;
     try {
-      await fetch(`http://localhost:5000/api/categories/${id}`, { method: "DELETE" });
+      await fetch(`https://interior-portfolio-api.onrender.com/api/categories/${id}`, { method: "DELETE" });
       await fetchCategories();
     } catch (err) {
       console.error(err);
@@ -146,8 +147,8 @@ export default function AdminDashboard() {
       }
 
       const url = projectForm.id
-        ? `http://localhost:5000/api/projects/${projectForm.id}`
-        : "http://localhost:5000/api/projects";
+      ? `https://interior-portfolio-api.onrender.com/api/projects/${projectForm.id}`
+        : "https://interior-portfolio-api.onrender.com/api/projects";
       const method = projectForm.id ? "PUT" : "POST";
 
       const res = await fetch(url, { method, body: formData });
@@ -185,7 +186,8 @@ export default function AdminDashboard() {
   const handleDeleteProject = async (id) => {
     if (!window.confirm("Delete this project?")) return;
     try {
-      await fetch(`http://localhost:5000/api/projects/${id}`, { method: "DELETE" });
+      await fetch(`https://interior-portfolio-api.onrender.com/api/projects/${id}`
+, { method: "DELETE" });
       await fetchProjects();
     } catch (err) {
       console.error(err);
@@ -200,7 +202,7 @@ export default function AdminDashboard() {
   try {
     // If we have an id, tell the server to delete DB row + file
     if (img.id) {
-      const res = await fetch(`http://localhost:5000/api/projects/image/${img.id}`, { method: "DELETE" });
+      const res = await fetch(`https://interior-portfolio-api.onrender.com/api/projects/image/${img.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Server failed to delete image");
     }
 

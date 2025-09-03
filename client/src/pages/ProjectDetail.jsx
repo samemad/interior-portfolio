@@ -11,7 +11,7 @@ export default function ProjectDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/projects/${id}`);
+        const res = await fetch(`https://interior-portfolio-api.onrender.com/api/projects/${id}`);
         if (!res.ok) throw new Error("Failed to fetch project");
         const data = await res.json();
         setProject(data);

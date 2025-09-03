@@ -11,10 +11,10 @@ export default function Category() {
     async function fetchCategoryData() {
       try {
         const categoryRes = await fetch(
-          `http://localhost:5000/api/categories/${categoryId}`
+          `https://interior-portfolio-api.onrender.com/api/categories/${categoryId}`
         );
         const projectsRes = await fetch(
-          `http://localhost:5000/api/projects/category/${categoryId}`
+          `https://interior-portfolio-api.onrender.com/api/projects/category/${categoryId}`
         );
 
         const categoryData = await categoryRes.json();
