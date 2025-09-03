@@ -42,11 +42,11 @@ export default function AdminLogin() {
       }
 
       // Store token in localStorage
+ 
       localStorage.setItem("adminToken", data.token);
-      
-      // Show success and redirect manually for now
-      alert("Login successful! Redirecting to dashboard...");
-      window.location.href = "/admin/dashboard";
+
+      // Use React Router navigation
+      navigate("/admin/dashboard");
       
     } catch (err) {
       setError(err.message);
