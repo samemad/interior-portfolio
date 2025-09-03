@@ -88,11 +88,8 @@ export default function Home() {
   <div className="grid md:grid-cols-2 gap-10 items-center">
     {/* About Image */}
     <div className="rounded-2xl overflow-hidden border border-white/5">
-      <img
-        src="/hero-bg.png"
-        alt="About Me"
-        className="w-full h-full object-cover aspect-[4/3] rounded-2xl"
-      />
+      <img src={`${import.meta.env.BASE_URL}hero-bg.png`} alt="About Me" />
+
     </div>
 
     {/* About Text */}

@@ -15,10 +15,11 @@ export default function Hero() {
     <section
       className="relative min-h-screen flex flex-col justify-center items-center text-center text-white px-6 sm:px-12"
       style={{
-        backgroundImage: `url("/hero-bg.jpg")`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+          backgroundImage: `url(${import.meta.env.BASE_URL}hero-bg.jpg)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+
     >
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-black/50"></div>
