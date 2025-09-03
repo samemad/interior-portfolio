@@ -1,5 +1,7 @@
 // Replace your current AdminLogin.jsx with this:
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Add this import
+
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -8,7 +10,7 @@ export default function AdminLogin() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const navigate = useNavigate(); // Add this line
   const handleChange = (e) => {
     setFormData({
       ...formData,
