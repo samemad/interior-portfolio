@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Category from "./pages/Category.jsx";
 import Projects from "./pages/Projects.jsx";
-import ProjectDetail from "./pages/ProjectDetail.jsx"; // ✅ import new detail page
+import ProjectDetail from "./pages/ProjectDetail.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -18,7 +18,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/category/:categoryId" element={<Category />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} /> {/* ✅ new */}
+          <Route path="/projects/:id" element={<ProjectDetail />} />
 
           {/* Admin pages */}
           <Route path="/admin" element={<AdminLogin />} />

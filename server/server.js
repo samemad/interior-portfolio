@@ -1,4 +1,3 @@
-// server/server.js
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -6,8 +5,14 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+
+// CORS configuration - allow only your GitHub Pages origin
+app.use(cors({
+  origin: 'https://samemad.github.io',
+  methods: ['GET', 'POST'], // Adjust methods as needed
+  allowedHeaders: ['Content-Type', 'Authorization'], // Add headers if required
+}));
 
 // Health check route
 app.get("/", (req, res) => {
