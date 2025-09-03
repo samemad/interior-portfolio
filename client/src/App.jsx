@@ -22,7 +22,7 @@ export default function App() {
 
           {/* Admin pages */}
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/#/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />
