@@ -22,21 +22,25 @@ const CategoryCard = ({ item }) => {
         ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
         hover:scale-105 hover:shadow-2xl`}
     >
-      <div
-        className="aspect-[16/10] bg-center bg-cover"
-        style={{
-          backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
-        }}
-      />
+      {/* Image container with better responsiveness */}
+      <div className="aspect-[16/10] relative overflow-hidden">
+        <img
+          src={item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"}
+          alt={item.name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+      </div>
+      
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      
+      {/* Smaller, more professional text */}
       <div className="absolute bottom-4 left-4">
-        <h3 className="text-xl md:text-3xl font-medium group-hover:text-luxuryGold transition-colors duration-300">
+        <h3 className="text-lg md:text-xl font-medium group-hover:text-luxuryGold transition-colors duration-300">
           {item.name}
         </h3>
       </div>
     </Link>
   );
 };
-
 
 export default CategoryCard;

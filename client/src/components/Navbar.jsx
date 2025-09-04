@@ -7,16 +7,22 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const NAV_Y_OFFSET = -64; // adjust to match your navbar height
+// Replace your scrollToSectionLocal function with this:
 
-  const scrollToSectionLocal = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return false;
-    const y = el.getBoundingClientRect().top + window.pageYOffset + NAV_Y_OFFSET;
-    window.scrollTo({ top: y, behavior: "smooth" });
-    return true;
-  };
-
+const scrollToSectionLocal = (id) => {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  
+  // Calculate navbar height dynamically
+  const navbar = document.querySelector('header');
+  const navbarHeight = navbar ? navbar.offsetHeight : 64;
+  const additionalOffset = 20; // Extra spacing from top
+  const NAV_Y_OFFSET = -(navbarHeight + additionalOffset);
+  
+  const y = el.getBoundingClientRect().top + window.pageYOffset + NAV_Y_OFFSET;
+  window.scrollTo({ top: y, behavior: "smooth" });
+  return true;
+};
   // Called by both desktop and mobile links
   const handleNavClick = (sectionId) => {
     setMenuOpen(false);
