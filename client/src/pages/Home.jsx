@@ -66,20 +66,41 @@ export default function Home() {
     <>
       <Hero />
 
-      {/* Categories */}
-     {/* Categories */}
+   // Update this part in your Home.jsx file:
+
+{/* Categories */}
 <section id="categories" className="max-w-6xl mx-auto px-4 mt-16">
   <h2 className="font-display text-2xl mb-4">Categories</h2>
 
   {loading && <p>Loading categories…</p>}
   {err && <p className="text-red-400">{err}</p>}
 
- <div className="flex gap-6 overflow-x-auto py-4 px-2 mt-6 scrollbar-hide">
-  {categories.map((c) => (
-    <CategoryCard key={c.id} item={c} />
-  ))}
-</div>
-
+  <div 
+    className="flex gap-6 overflow-x-auto py-4 px-2 mt-6 scrollbar-hide touch-pan-x"
+    style={{
+      overflowY: 'hidden',
+      WebkitOverflowScrolling: 'touch'
+    }}
+    onTouchStart={(e) => {
+      // Store initial touch position
+      e.currentTarget.touchStartY = e.touches[0].clientY;
+    }}
+    onTouchMove={(e) => {
+      // Prevent vertical scrolling if user is scrolling horizontally
+      const touchY = e.touches[0].clientY;
+      const startY = e.currentTarget.touchStartY;
+      const deltaY = Math.abs(touchY - startY);
+      const deltaX = Math.abs(e.touches[0].clientX - (e.currentTarget.touchStartX || e.touches[0].clientX));
+      
+      if (deltaX > deltaY) {
+        e.preventDefault();
+      }
+    }}
+  >
+    {categories.map((c) => (
+      <CategoryCard key={c.id} item={c} />
+    ))}
+  </div>
 </section>
 
           {/* About */}

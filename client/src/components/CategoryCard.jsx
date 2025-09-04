@@ -2,13 +2,13 @@
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
-// Alternative version using background-image with better positioning
 const CategoryCard = ({ item }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.2,
   });
 
+  // helper: handle both relative and full URLs
   const toUrl = (p) => {
     if (!p) return null;
     return p.startsWith("http") ? p : `https://interior-portfolio-api.onrender.com${p}`;
@@ -23,10 +23,9 @@ const CategoryCard = ({ item }) => {
         hover:scale-105 hover:shadow-2xl`}
     >
       <div
-        className="aspect-[16/10] bg-center bg-contain bg-no-repeat group-hover:scale-110 transition-transform duration-500"
+        className="aspect-[16/10] bg-center bg-cover group-hover:scale-110 transition-transform duration-500"
         style={{
           backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
-          backgroundColor: 'rgba(0,0,0,0.1)' // subtle background color
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
