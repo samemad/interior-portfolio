@@ -66,7 +66,6 @@ export default function Home() {
     <>
       <Hero />
 
-   // Update this part in your Home.jsx file:
 
 {/* Categories */}
 <section id="categories" className="max-w-6xl mx-auto px-4 mt-16">
