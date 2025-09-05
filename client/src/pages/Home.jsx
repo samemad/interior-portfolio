@@ -117,20 +117,22 @@ export default function Home() {
               </div>
             )}
             
-            <img 
-              src={`${import.meta.env.BASE_URL}hero-bg.png`} 
-              alt="About Me"
-              className={`w-full h-auto transition-opacity duration-700 ${
-                aboutImageLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              loading="eager"
-              onLoad={() => setAboutImageLoaded(true)}
-              onError={() => {
-                console.log('Image failed to load');
-                setAboutImageLoaded(true); // Hide skeleton even on error
-              }}
-            />
-            
+                        <img 
+                src={`${import.meta.env.BASE_URL}hero-bg.png`} 
+                alt="About Me"
+                className={`mx-auto rounded-2xl object-contain transition-opacity duration-700 ${
+                  aboutImageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ maxHeight: "400px", width: "100%", objectFit: "cover" }}
+                loading="eager"
+                onLoad={() => setAboutImageLoaded(true)}
+                onError={() => {
+                  console.log('Image failed to load');
+                  setAboutImageLoaded(true);
+                }}
+              />
+
+          
             {/* Error fallback (optional) */}
             {aboutImageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
