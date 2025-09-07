@@ -38,7 +38,7 @@ export async function fetchCategories() {
   const startTime = Date.now();
   
   try {
-    const res = await fetchWithTimeout(`${API_BASE}/categories`, {}, 10000);
+    const res = await fetchWithTimeout(`${API_BASE}/categories`, {}, 30000);
     const data = await handleApiResponse(res, 'Fetch categories');
     
     const duration = Date.now() - startTime;
@@ -58,7 +58,7 @@ export async function fetchCategory(id) {
   const startTime = Date.now();
   
   try {
-    const res = await fetchWithTimeout(`${API_BASE}/categories/${id}`, {}, 10000);
+    const res = await fetchWithTimeout(`${API_BASE}/categories/${id}`, {}, 30000);
     const data = await handleApiResponse(res, 'Fetch category');
     
     const duration = Date.now() - startTime;
