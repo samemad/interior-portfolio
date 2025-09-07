@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const { upload, uploadToCloudinary, deleteFromCloudinary } = require("../middleware/cloudinaryUpload");
+const { upload, uploadToCloudinary, deleteFromCloudinary, uploadMultipleToCloudinary } = require("../middleware/cloudinaryUpload");
 
 // Helper function to extract Cloudinary public ID from URL
 const getPublicIdFromUrl = (url) => {
@@ -12,7 +12,10 @@ const getPublicIdFromUrl = (url) => {
 
 // ===== GET all projects with category + images =====
 router.get("/", async (req, res) => {
+  const startTime = Date.now();
   try {
+    console.log('Fetching all projects...');
+    
     const query = `
       SELECT p.id AS project_id, p.title, p.description, p.category_id, c.name AS category,
              i.id AS image_id, i.image_path
@@ -45,16 +48,23 @@ router.get("/", async (req, res) => {
       }
     });
 
+    const queryTime = Date.now() - startTime;
+    console.log(`Projects fetched in ${queryTime}ms. Found: ${Object.keys(projects).length} projects`);
+    
     res.json(Object.values(projects));
   } catch (err) {
-    console.error("Error fetching projects:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error fetching projects after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
 // ===== GET projects by category =====
 router.get("/category/:id", async (req, res) => {
+  const startTime = Date.now();
   try {
+    console.log(`Fetching projects for category: ${req.params.id}`);
+    
     const query = `
       SELECT p.id AS project_id, p.title, p.description, p.category_id, c.name AS category,
              i.id AS image_id, i.image_path
@@ -88,19 +98,36 @@ router.get("/category/:id", async (req, res) => {
       }
     });
 
+    const queryTime = Date.now() - startTime;
+    console.log(`Category projects fetched in ${queryTime}ms. Found: ${Object.keys(projects).length} projects`);
+
     res.json(Object.values(projects));
   } catch (err) {
-    console.error("Error fetching projects by category:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error fetching projects by category after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
-// ===== ADD PROJECT with Cloudinary =====
+// ===== OPTIMIZED: ADD PROJECT with Cloudinary =====
 router.post("/", upload.array("images", 10), async (req, res) => {
+  const startTime = Date.now();
   try {
     const { title, description, category_id } = req.body;
+    
+    console.log(`Creating new project: "${title}" with ${req.files?.length || 0} images`);
+    
     if (!title || !description || !category_id) {
       return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Validate file sizes
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        if (file.size > 5 * 1024 * 1024) {
+          return res.status(400).json({ error: `Image ${file.originalname} is too large. Max 5MB allowed.` });
+        }
+      }
     }
 
     // Insert project first
@@ -112,15 +139,17 @@ router.post("/", upload.array("images", 10), async (req, res) => {
     const projectResult = await pool.query(projectQuery, [title, description, category_id]);
     const projectId = projectResult.rows[0].id;
 
+    console.log(`Project created with ID: ${projectId}`);
+
     const uploadedImages = [];
 
-    // Upload images to Cloudinary if any
+    // Use batch upload for better performance if multiple images
     if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
+      if (req.files.length === 1) {
+        // Single image upload
         try {
-          const cloudinaryResult = await uploadToCloudinary(file.buffer, 'interior-portfolio/projects');
+          const cloudinaryResult = await uploadToCloudinary(req.files[0].buffer, 'interior-portfolio/projects');
           
-          // Insert image URL into database
           const imageQuery = `INSERT INTO project_images (project_id, image_path) VALUES ($1, $2) RETURNING id`;
           const imageResult = await pool.query(imageQuery, [projectId, cloudinaryResult.secure_url]);
           
@@ -129,8 +158,40 @@ router.post("/", upload.array("images", 10), async (req, res) => {
             path: cloudinaryResult.secure_url,
           });
         } catch (uploadError) {
-          console.error('Error uploading to Cloudinary:', uploadError);
+          console.error('Error uploading single image to Cloudinary:', uploadError.message);
+          // Continue without image rather than failing completely
         }
+      } else {
+        // Multiple images - use parallel upload
+        console.log(`Starting parallel upload of ${req.files.length} images...`);
+        
+        const uploadPromises = req.files.map(async (file, index) => {
+          try {
+            const cloudinaryResult = await uploadToCloudinary(file.buffer, 'interior-portfolio/projects');
+            
+            const imageQuery = `INSERT INTO project_images (project_id, image_path) VALUES ($1, $2) RETURNING id`;
+            const imageResult = await pool.query(imageQuery, [projectId, cloudinaryResult.secure_url]);
+            
+            return {
+              id: imageResult.rows[0].id,
+              path: cloudinaryResult.secure_url,
+            };
+          } catch (uploadError) {
+            console.error(`Error uploading image ${index} to Cloudinary:`, uploadError.message);
+            return null; // Return null for failed uploads
+          }
+        });
+
+        const results = await Promise.allSettled(uploadPromises);
+        
+        // Filter successful uploads
+        results.forEach(result => {
+          if (result.status === 'fulfilled' && result.value) {
+            uploadedImages.push(result.value);
+          }
+        });
+
+        console.log(`Parallel upload completed. Successful: ${uploadedImages.length}/${req.files.length}`);
       }
     }
 
@@ -142,17 +203,23 @@ router.post("/", upload.array("images", 10), async (req, res) => {
       images: uploadedImages,
     };
 
+    const totalTime = Date.now() - startTime;
+    console.log(`Project creation completed in ${totalTime}ms`);
+
     res.status(201).json(newProject);
   } catch (err) {
-    console.error("Error creating project:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error creating project after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
 // ===== GET single project by id =====
 router.get("/:id", async (req, res) => {
+  const startTime = Date.now();
   try {
     const projectId = req.params.id;
+    console.log(`Fetching project: ${projectId}`);
 
     const query = `
       SELECT p.id AS project_id, p.title, p.description, p.category_id, c.name AS category,
@@ -166,7 +233,11 @@ router.get("/:id", async (req, res) => {
     const result = await pool.query(query, [projectId]);
     const rows = result.rows;
 
-    if (rows.length === 0) return res.status(404).json({ error: "Project not found" });
+    if (rows.length === 0) {
+      const queryTime = Date.now() - startTime;
+      console.log(`Project not found after ${queryTime}ms`);
+      return res.status(404).json({ error: "Project not found" });
+    }
 
     const project = { images: [] };
     rows.forEach(row => {
@@ -183,39 +254,67 @@ router.get("/:id", async (req, res) => {
       }
     });
 
+    const queryTime = Date.now() - startTime;
+    console.log(`Project fetched in ${queryTime}ms`);
+
     res.json(project);
   } catch (err) {
-    console.error("Error fetching project:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error fetching project after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
-// ===== UPDATE PROJECT =====
+// ===== OPTIMIZED: UPDATE PROJECT =====
 router.put("/:id", upload.array("images", 10), async (req, res) => {
+  const startTime = Date.now();
   try {
     const projectId = req.params.id;
     const { title, description, category_id } = req.body;
+
+    console.log(`Updating project: ${projectId} with ${req.files?.length || 0} new images`);
 
     if (!title || !description || !category_id) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // Update project details
-    const updateQuery = `UPDATE projects SET title=$1, description=$2, category_id=$3 WHERE id=$4`;
-    await pool.query(updateQuery, [title, description, category_id, projectId]);
-
-    // Upload new images if any
+    // Validate file sizes
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
+        if (file.size > 5 * 1024 * 1024) {
+          return res.status(400).json({ error: `Image ${file.originalname} is too large. Max 5MB allowed.` });
+        }
+      }
+    }
+
+    // Update project details
+    const updateQuery = `UPDATE projects SET title=$1, description=$2, category_id=$3 WHERE id=$4`;
+    const updateResult = await pool.query(updateQuery, [title, description, category_id, projectId]);
+
+    if (updateResult.rowCount === 0) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    console.log('Project details updated successfully');
+
+    // Upload new images if any (using parallel processing)
+    if (req.files && req.files.length > 0) {
+      console.log(`Uploading ${req.files.length} new images...`);
+      
+      const uploadPromises = req.files.map(async (file, index) => {
         try {
           const cloudinaryResult = await uploadToCloudinary(file.buffer, 'interior-portfolio/projects');
           
           const imageQuery = `INSERT INTO project_images (project_id, image_path) VALUES ($1, $2)`;
           await pool.query(imageQuery, [projectId, cloudinaryResult.secure_url]);
+          
+          console.log(`Image ${index + 1} uploaded successfully`);
         } catch (uploadError) {
-          console.error('Error uploading to Cloudinary:', uploadError);
+          console.error(`Error uploading image ${index}:`, uploadError.message);
         }
-      }
+      });
+
+      await Promise.allSettled(uploadPromises);
     }
 
     // Return updated project
@@ -246,46 +345,69 @@ router.put("/:id", upload.array("images", 10), async (req, res) => {
       }
     });
 
+    const totalTime = Date.now() - startTime;
+    console.log(`Project update completed in ${totalTime}ms`);
+
     res.json(project);
   } catch (err) {
-    console.error("Error updating project:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error updating project after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
-// ===== DELETE PROJECT =====
+// ===== OPTIMIZED: DELETE PROJECT =====
 router.delete("/:id", async (req, res) => {
+  const startTime = Date.now();
   try {
+    const projectId = req.params.id;
+    console.log(`Deleting project: ${projectId}`);
+
     // Get all image URLs for this project
-    const imageResult = await pool.query("SELECT image_path FROM project_images WHERE project_id=$1", [req.params.id]);
+    const imageResult = await pool.query("SELECT image_path FROM project_images WHERE project_id=$1", [projectId]);
     
-    // Delete images from Cloudinary
-    for (const row of imageResult.rows) {
+    console.log(`Found ${imageResult.rows.length} images to delete from Cloudinary`);
+
+    // Delete images from Cloudinary in parallel
+    const deletePromises = imageResult.rows.map(async (row, index) => {
       if (row.image_path && row.image_path.includes('cloudinary.com')) {
         try {
           const publicId = getPublicIdFromUrl(row.image_path);
           await deleteFromCloudinary(publicId);
+          console.log(`Image ${index + 1} deleted from Cloudinary`);
         } catch (deleteError) {
-          console.error('Error deleting from Cloudinary:', deleteError);
+          console.error(`Error deleting image ${index} from Cloudinary:`, deleteError.message);
         }
       }
-    }
+    });
+
+    await Promise.allSettled(deletePromises);
 
     // Delete from database
-    await pool.query("DELETE FROM project_images WHERE project_id=$1", [req.params.id]);
-    await pool.query("DELETE FROM projects WHERE id=$1", [req.params.id]);
+    await pool.query("DELETE FROM project_images WHERE project_id=$1", [projectId]);
+    const deleteResult = await pool.query("DELETE FROM projects WHERE id=$1 RETURNING *", [projectId]);
 
-    res.json({ message: "Project deleted" });
+    if (deleteResult.rowCount === 0) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const totalTime = Date.now() - startTime;
+    console.log(`Project deletion completed in ${totalTime}ms`);
+
+    res.json({ message: "Project deleted successfully" });
   } catch (err) {
-    console.error("Error deleting project:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error deleting project after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
-// ===== DELETE single image =====
+// ===== OPTIMIZED: DELETE single image =====
 router.delete("/image/:id", async (req, res) => {
+  const startTime = Date.now();
   try {
     const imageId = req.params.id;
+    console.log(`Deleting image: ${imageId}`);
 
     // Get image URL
     const result = await pool.query("SELECT image_path FROM project_images WHERE id = $1", [imageId]);
@@ -301,18 +423,28 @@ router.delete("/image/:id", async (req, res) => {
       try {
         const publicId = getPublicIdFromUrl(imageUrl);
         await deleteFromCloudinary(publicId);
+        console.log('Image deleted from Cloudinary successfully');
       } catch (deleteError) {
-        console.error('Error deleting from Cloudinary:', deleteError);
+        console.error('Error deleting from Cloudinary:', deleteError.message);
+        // Continue with database deletion even if Cloudinary fails
       }
     }
 
     // Delete from database
-    await pool.query("DELETE FROM project_images WHERE id = $1", [imageId]);
+    const deleteResult = await pool.query("DELETE FROM project_images WHERE id = $1 RETURNING *", [imageId]);
 
-    res.json({ message: "Image deleted" });
+    if (deleteResult.rowCount === 0) {
+      return res.status(404).json({ error: "Image not found in database" });
+    }
+
+    const totalTime = Date.now() - startTime;
+    console.log(`Image deletion completed in ${totalTime}ms`);
+
+    res.json({ message: "Image deleted successfully" });
   } catch (err) {
-    console.error("Error deleting image:", err);
-    res.status(500).json({ error: "Database error" });
+    const errorTime = Date.now() - startTime;
+    console.error(`Error deleting image after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
   }
 });
 
