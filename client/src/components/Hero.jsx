@@ -136,10 +136,10 @@ export default function Hero() {
                 <div className="absolute inset-3 sm:inset-4 bg-gradient-to-br from-purple-900/20 to-pink-900/20 backdrop-blur-sm flex items-center justify-center">
                   <div className="text-center space-y-3 sm:space-y-3">
                     <div className="text-5xl sm:text-4xl lg:text-5xl font-extralight text-purple-200">
-                      10+
+                      6+
                     </div>
                     <div className="text-sm sm:text-xs text-gray-300 tracking-[0.15em] uppercase">
-                      Years of Excellence
+                      Years of Experience
                     </div>
                     <div className="w-14 sm:w-12 h-px bg-gradient-to-r from-purple-400 to-pink-400 mx-auto"></div>
                     <div className="text-sm sm:text-xs text-gray-400">
