@@ -1,0 +1,54 @@
+/* LiquidEther Component Styles - Luxury Theme */
+.liquid-ether-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:  #000000;
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1;
+}
+
+.liquid-ether-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Smooth transitions for luxury feel */
+.liquid-ether-container * {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hide scrollbars */
+.liquid-ether-container::-webkit-scrollbar {
+  display: none;
+}
+
+.liquid-ether-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Luxury shimmer effect */
+@keyframes luxuryShimmer {
+  0% {
+    transform: translateX(-100%) rotate(-45deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(-45deg);
+  }
+}
+
+/* Performance optimizations for mobile */
+@media (max-width: 768px) {
+  .liquid-ether-container {
+    /* Reduce complexity on mobile for better performance */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
