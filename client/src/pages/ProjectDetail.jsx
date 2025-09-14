@@ -173,16 +173,14 @@ export default function ProjectDetail() {
           {/* Main image */}
           {project.images?.[0] && (
             <div className="relative group mb-8">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-              <div className="relative">
-                <img
-                  src={project.images[0].path}
-                  alt={project.title}
-                  className="w-full rounded-2xl shadow-2xl cursor-pointer hover:shadow-purple-500/20 transition-all duration-500 border border-purple-300/20"
-                  onClick={() => openLightbox(0)}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 pointer-events-none"></div>
+              <img
+                src={project.images[0].path}
+                alt={project.title}
+                className="relative w-full rounded-2xl shadow-2xl cursor-pointer hover:shadow-purple-500/20 transition-all duration-500 border border-purple-300/20 z-10"
+                onClick={() => openLightbox(0)}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
             </div>
           )}
 
