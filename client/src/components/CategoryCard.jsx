@@ -30,7 +30,7 @@ const CategoryCard = ({ item }) => {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
       <div className="absolute bottom-4 left-4">
-        <h3 className="text-base md:text-lg font-medium group-hover:text-luxuryGold transition-colors duration-300">
+        <h3 className="text-base md:text-lg font-medium group-hover:text--purple-600 transition-colors duration-300">
           {item.name}
         </h3>
       </div>
