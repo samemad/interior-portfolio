@@ -1,5 +1,6 @@
 // client/src/utils/api.js - OPTIMIZED VERSION WITH TIMEOUT HANDLING
-const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app';// ⚡ Helper function to create requests with timeout
+const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app/api';
+
 const fetchWithTimeout = async (url, options = {}, timeoutMs = 60000) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -292,6 +293,30 @@ export async function deleteCategory(id) {
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error(`❌ Failed to delete category after ${duration}ms:`, error.message);
+    throw error;
+  }
+}
+// Login function
+export async function login(username, password) {
+  console.log('🔄 Attempting login...');
+  const startTime = Date.now();
+  
+  try {
+    const res = await fetchWithTimeout(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    }, 15000);
+    
+    const data = await handleApiResponse(res, 'Login');
+    
+    const duration = Date.now() - startTime;
+    console.log(`✅ Login successful in ${duration}ms`);
+    
+    return data;
+  } catch (error) {
+    const duration = Date.now() - startTime;
+    console.error(`❌ Login failed after ${duration}ms:`, error.message);
     throw error;
   }
 }
