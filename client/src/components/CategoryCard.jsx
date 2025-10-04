@@ -11,7 +11,7 @@ const CategoryCard = ({ item }) => {
   // helper: handle both relative and full URLs
   const toUrl = (p) => {
     if (!p) return null;
-    return p.startsWith("http") ? p : `https://interior-portfolio-api.onrender.com${p}`;
+    return p.startsWith("http") ? p : `https://social-marnie-devsam-3696528a.koyeb.app${p}`;
   };
 
   return (

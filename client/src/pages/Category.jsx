@@ -67,10 +67,10 @@ export default function Category() {
     async function fetchCategoryData() {
       try {
         const categoryRes = await fetch(
-          `https://interior-portfolio-api.onrender.com/api/categories/${categoryId}`
+          `https://social-marnie-devsam-3696528a.koyeb.app/api/categories/${categoryId}`
         );
         const projectsRes = await fetch(
-          `https://interior-portfolio-api.onrender.com/api/projects/category/${categoryId}`
+          `https://social-marnie-devsam-3696528a.koyeb.app/api/projects/category/${categoryId}`
         );
 
         const categoryData = await categoryRes.json();

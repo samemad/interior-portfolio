@@ -2,42 +2,31 @@
 import { useState, useEffect } from "react";
 
 export default function AdminDashboard() {
-  const token = localStorage.getItem("adminToken");
-  if (!token) {
-    window.location.href = "/admin";
-    return null;
-  }
-
-  const [loading, setLoading] = useState(false); // ✅ loader state
-
-  // helper to produce full URL (works if backend returns "/uploads/..." or full "http...")
-  const toUrl = (p) => {
-    if (!p) return null;
-    return p.startsWith("http") ? p : `https://interior-portfolio-api.onrender.com${p}`;
-  };
-
-  // ===== Tabs =====
-  const [activeTab, setActiveTab] = useState("home"); // 'home', 'categories', 'projects'
-
-  // ===== Categories =====
+  // ✅ ALL HOOKS FIRST - BEFORE ANY CONDITIONS
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("home");
   const [categories, setCategories] = useState([]);
   const [categoryForm, setCategoryForm] = useState({ id: null, name: "", cover: null, existingCover: null });
-
-  // ===== Projects =====
   const [projects, setProjects] = useState([]);
   const [projectForm, setProjectForm] = useState({
     id: null,
     title: "",
     description: "",
     category_id: "",
-    images: [], // new File[]
-    existingImages: [], // [{ id, path }]
+    images: [],
+    existingImages: [],
   });
 
-  // ===== Fetch data =====
+  // Helper function
+  const toUrl = (p) => {
+    if (!p) return null;
+    return p.startsWith("http") ? p : `https://social-marnie-devsam-3696528a.koyeb.app${p}`;
+  };
+
+  // Fetch functions
   const fetchCategories = async () => {
     try {
-      const res = await fetch("https://interior-portfolio-api.onrender.com/api/categories");
+      const res = await fetch("https://social-marnie-devsam-3696528a.koyeb.app/api/categories");
       const data = await res.json();
       const normalized = data.map(c => ({
         ...c,
@@ -51,7 +40,7 @@ export default function AdminDashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("https://interior-portfolio-api.onrender.com/api/projects");
+      const res = await fetch("https://social-marnie-devsam-3696528a.koyeb.app/api/projects");
       const data = await res.json();
 
       const normalized = data.map(p => {
@@ -80,12 +69,20 @@ export default function AdminDashboard() {
     }
   };
 
+  // ✅ useEffect hook
   useEffect(() => {
     fetchCategories();
     fetchProjects();
   }, []);
 
-  // ===== Category Handlers =====
+  // ✅ NOW check token AFTER all hooks
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    window.location.href = "/admin";
+    return null;
+  }
+
+  // Category handlers
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -95,8 +92,8 @@ export default function AdminDashboard() {
       if (categoryForm.cover) formData.append("cover", categoryForm.cover);
 
       const url = categoryForm.id
-        ? `https://interior-portfolio-api.onrender.com/api/categories/${categoryForm.id}`
-        : "https://interior-portfolio-api.onrender.com/api/categories";
+        ? `https://social-marnie-devsam-3696528a.koyeb.app/api/categories/${categoryForm.id}`
+        : "https://social-marnie-devsam-3696528a.koyeb.app/api/categories";
 
       const method = categoryForm.id ? "PUT" : "POST";
 
@@ -126,7 +123,7 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this category?")) return;
     setLoading(true);
     try {
-      await fetch(`https://interior-portfolio-api.onrender.com/api/categories/${id}`, { method: "DELETE" });
+      await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/categories/${id}`, { method: "DELETE" });
       await fetchCategories();
     } catch (err) {
       console.error(err);
@@ -136,7 +133,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // ===== Project Handlers =====
+  // Project handlers
   const handleProjectSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -157,8 +154,8 @@ export default function AdminDashboard() {
       }
 
       const url = projectForm.id
-        ? `https://interior-portfolio-api.onrender.com/api/projects/${projectForm.id}`
-        : "https://interior-portfolio-api.onrender.com/api/projects";
+        ? `https://social-marnie-devsam-3696528a.koyeb.app/api/projects/${projectForm.id}`
+        : "https://social-marnie-devsam-3696528a.koyeb.app/api/projects";
       const method = projectForm.id ? "PUT" : "POST";
 
       const res = await fetch(url, { method, body: formData });
@@ -196,7 +193,7 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this project?")) return;
     setLoading(true);
     try {
-      await fetch(`https://interior-portfolio-api.onrender.com/api/projects/${id}`, { method: "DELETE" });
+      await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/projects/${id}`, { method: "DELETE" });
       await fetchProjects();
     } catch (err) {
       console.error(err);
@@ -211,7 +208,7 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       if (img.id) {
-        const res = await fetch(`https://interior-portfolio-api.onrender.com/api/projects/image/${img.id}`, { method: "DELETE" });
+        const res = await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/projects/image/${img.id}`, { method: "DELETE" });
         if (!res.ok) throw new Error("Server failed to delete image");
       }
 
@@ -245,7 +242,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // file input change handlers
   const onCategoryFileChange = (e) => {
     const file = e.target.files?.[0] ?? null;
     setCategoryForm(prev => ({ ...prev, cover: file }));
@@ -268,16 +264,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex min-h-screen bg-luxuryBg text-white">
-      {/* Sidebar */}
       <aside className="w-60 bg-luxurySurface p-6 flex flex-col gap-4">
         <button onClick={() => setActiveTab("home")} className={`py-2 px-4 rounded-lg ${activeTab==="home" ? "bg-luxuryGold text-black" : ""}`}>Home</button>
         <button onClick={() => setActiveTab("categories")} className={`py-2 px-4 rounded-lg ${activeTab==="categories" ? "bg-luxuryGold text-black" : ""}`}>Categories</button>
         <button onClick={() => setActiveTab("projects")} className={`py-2 px-4 rounded-lg ${activeTab==="projects" ? "bg-luxuryGold text-black" : ""}`}>Projects</button>
       </aside>
 
-      {/* Main */}
       <main className="flex-1 p-8 overflow-auto">
-        {/* Home */}
         {activeTab === "home" && (
           <div className="text-center mt-20">
             <h1 className="text-4xl font-bold mb-4">Welcome Admin!</h1>
@@ -285,7 +278,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Categories */}
         {activeTab === "categories" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Categories</h2>
@@ -316,7 +308,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Projects */}
         {activeTab === "projects" && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Projects</h2>
@@ -369,7 +360,6 @@ export default function AdminDashboard() {
         )}
       </main>
 
-      {/* ✅ Loader Overlay */}
       {loading && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-luxuryGold border-solid"></div>
