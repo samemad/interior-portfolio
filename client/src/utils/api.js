@@ -1,5 +1,5 @@
 // client/src/utils/api.js - OPTIMIZED VERSION WITH TIMEOUT HANDLING
-const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app/api';
+const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app.api';
 
 const fetchWithTimeout = async (url, options = {}, timeoutMs = 60000) => {
   const controller = new AbortController();
