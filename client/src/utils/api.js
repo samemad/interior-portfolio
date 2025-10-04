@@ -1,6 +1,5 @@
 // client/src/utils/api.js - OPTIMIZED VERSION WITH TIMEOUT HANDLING
-const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app';
-// ⚡ Helper function to create requests with timeout
+const API_BASE = 'https://social-marnie-devsam-3696528a.koyeb.app';// ⚡ Helper function to create requests with timeout
 const fetchWithTimeout = async (url, options = {}, timeoutMs = 60000) => {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
