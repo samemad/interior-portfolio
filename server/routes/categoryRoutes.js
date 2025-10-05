@@ -39,7 +39,7 @@ router.post("/", upload.single("cover"), async (req, res) => {
 
     const query = "INSERT INTO categories (name, cover_image) VALUES ($1, $2) RETURNING id";
     const result = await pool.query(query, [name, coverUrl]);
-    await global.deleteCache('categories'); 
+    await cache.deleteCache('categories'); 
 
     res.status(201).json({ 
       id: result.rows[0].id, 
@@ -96,7 +96,7 @@ router.put("/:id", upload.single("cover"), async (req, res) => {
     // Update category in database
     const updateQuery = "UPDATE categories SET name = $1, cover_image = $2 WHERE id = $3";
     await pool.query(updateQuery, [name, newCoverUrl, categoryId]);
-    await global.deleteCache('categories'); // ADD THIS LINE
+    await cache.deleteCache('categories'); // ADD THIS LINE
 
     res.json({ 
       id: parseInt(categoryId), 
@@ -135,7 +135,7 @@ router.delete("/:id", async (req, res) => {
 
     // Delete category from database
     await pool.query("DELETE FROM categories WHERE id = $1", [categoryId]);
-    await global.deleteCache('categories'); // ADD THIS LINE
+    await cache.deleteCache('categories'); // ADD THIS LINE
 
     res.json({ message: "Category deleted" });
   } catch (err) {

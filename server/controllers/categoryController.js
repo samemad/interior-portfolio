@@ -1,58 +1,23 @@
 // server/controllers/categoryController.js
-
-
 const pool = require("../config/db");
+
+const { cache } = require('../server');
 
 async function getCategories(req, res) {
   try {
-    console.log('🔄 Fetching categories...');
-    
-    // Check cache first
-    const cached = await global.getCache('categories');
+    const cached = await cache.getCache('categories'); // Use cache.getCache
     if (cached) {
-      console.log('⚡ Cache hit - categories');
+      console.log('⚡ Cache hit');
       return res.json(cached);
     }
     
-    // Fetch from database
     const result = await pool.query("SELECT * FROM categories ORDER BY id");
-    console.log('✅ Categories found:', result.rows.length);
-    
-    // Cache forever
-    await global.setCache('categories', result.rows);
-    
+    await cache.setCache('categories', result.rows); // Use cache.setCache
     res.json(result.rows);
   } catch (err) {
-    console.error('❌ Error in getCategories:', err.message);
-    console.error('Full error:', err);
     res.status(500).json({ error: "Server error", details: err.message });
   }
 }
-
-// Keep all your other functions the same
-async function addCategory(req, res) {
-  // ... existing code
-}
-
-async function getCategoryById(req, res) {
-  // ... existing code
-}
-
-async function updateCategory(req, res) {
-  // ... existing code
-}
-
-async function deleteCategory(req, res) {
-  // ... existing code
-}
-
-module.exports = { 
-  getCategories, 
-  addCategory, 
-  getCategoryById, 
-  updateCategory, 
-  deleteCategory 
-};
 
 async function addCategory(req, res) {
   try {

@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
     console.log('Fetching all projects...');
     
     // Check cache first
-    const cached = await global.getCache('projects');
+    const cached = await cache.getCache('projects');
     if (cached) {
       console.log('⚡ Cache hit - projects');
       return res.json(cached);
@@ -60,7 +60,7 @@ router.get("/", async (req, res) => {
     console.log(`Projects fetched in ${queryTime}ms. Found: ${projectsArray.length} projects`);
     
     // Cache forever
-    await global.setCache('projects', projectsArray);
+    await cache.setCache('projects', projectsArray);
     
     res.json(projectsArray);
   } catch (err) {
@@ -265,7 +265,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project creation completed in ${totalTime}ms`);
-    await global.deleteCache('projects'); // ADD THIS LINE
+    await cache.deleteCache('projects'); // ADD THIS LINE
 
     res.status(201).json(newProject);
   } catch (err) {
@@ -408,7 +408,7 @@ router.put("/:id", upload.array("images", 10), async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project update completed in ${totalTime}ms`);
-    await global.deleteCache('projects'); // ADD THIS LINE
+    await cache.deleteCache('projects'); // ADD THIS LINE
 
     res.json(project);
   } catch (err) {
@@ -455,7 +455,7 @@ router.delete("/:id", async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project deletion completed in ${totalTime}ms`);
-    await global.deleteCache('projects'); // ADD THIS LINE
+    await cache.deleteCache('projects'); // ADD THIS LINE
 
     res.json({ message: "Project deleted successfully" });
   } catch (err) {
