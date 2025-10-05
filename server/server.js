@@ -50,9 +50,9 @@ const deleteCache = async (key) => {
     console.error('Cache delete error:', error);
   }
 };
-module.exports.getCache = getCache;
-module.exports.setCache = setCache;
-module.exports.deleteCache = deleteCache;
+global.getCache = getCache;
+global.setCache = setCache;
+global.deleteCache = deleteCache;
 
 // ---------------- REQUEST LOGGING MIDDLEWARE -----------------
 app.use((req, res, next) => {
