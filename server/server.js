@@ -3,6 +3,56 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+const redis = require('redis');
+
+
+
+// Redis setup connection
+console.log('🔌 Connecting to Redis...');
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+
+redisClient.connect()
+  .then(() => console.log('✅ Redis Connected'))
+  .catch(err => {
+    console.error('❌ Redis error:', err);
+    console.log('⚠️ Running without cache');
+  });
+
+redisClient.on('error', (err) => console.log('Redis Error:', err));
+
+// Cache helpers
+const getCache = async (key) => {
+  try {
+    const data = await redisClient.get(key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error('Cache get error:', error);
+    return null;
+  }
+};
+
+const setCache = async (key, data, ttl = 3600) => {
+  try {
+    await redisClient.setEx(key, ttl, JSON.stringify(data));
+    console.log(`📦 Cached: ${key}`);
+  } catch (error) {
+    console.error('Cache set error:', error);
+  }
+};
+
+const deleteCache = async (key) => {
+  try {
+    await redisClient.del(key);
+    console.log(`🗑️ Cleared: ${key}`);
+  } catch (error) {
+    console.error('Cache delete error:', error);
+  }
+};
+module.exports.getCache = getCache;
+module.exports.setCache = setCache;
+module.exports.deleteCache = deleteCache;
 
 // ---------------- REQUEST LOGGING MIDDLEWARE -----------------
 app.use((req, res, next) => {

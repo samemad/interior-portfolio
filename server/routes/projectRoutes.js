@@ -10,6 +10,66 @@ const getPublicIdFromUrl = (url) => {
   return `interior-portfolio/${filename.split('.')[0]}`;
 };
 
+router.get("/", async (req, res) => {
+  const startTime = Date.now();
+  try {
+    console.log('Fetching all projects...');
+    
+    // Check cache first
+    const cached = await global.getCache('projects');
+    if (cached) {
+      console.log('⚡ Cache hit - projects');
+      return res.json(cached);
+    }
+    
+    const query = `
+      SELECT p.id AS project_id, p.title, p.description, p.category_id, c.name AS category,
+             i.id AS image_id, i.image_path
+      FROM projects p
+      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN project_images i ON p.id = i.project_id
+      ORDER BY p.created_at DESC
+    `;
+
+    const result = await pool.query(query);
+    const rows = result.rows;
+
+    const projects = {};
+    rows.forEach(row => {
+      if (!projects[row.project_id]) {
+        projects[row.project_id] = {
+          id: row.project_id,
+          title: row.title,
+          description: row.description,
+          category_id: row.category_id,
+          category: row.category,
+          images: [],
+        };
+      }
+      if (row.image_path) {
+        projects[row.project_id].images.push({
+          id: row.image_id,
+          path: row.image_path,
+        });
+      }
+    });
+
+    const projectsArray = Object.values(projects);
+
+    const queryTime = Date.now() - startTime;
+    console.log(`Projects fetched in ${queryTime}ms. Found: ${projectsArray.length} projects`);
+    
+    // Cache forever
+    await global.setCache('projects', projectsArray);
+    
+    res.json(projectsArray);
+  } catch (err) {
+    const errorTime = Date.now() - startTime;
+    console.error(`Error fetching projects after ${errorTime}ms:`, err.message);
+    res.status(500).json({ error: "Database error", details: err.message });
+  }
+});
+
 // ===== GET all projects with category + images =====
 router.get("/", async (req, res) => {
   const startTime = Date.now();
@@ -205,6 +265,7 @@ router.post("/", upload.array("images", 10), async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project creation completed in ${totalTime}ms`);
+    await global.deleteCache('projects'); // ADD THIS LINE
 
     res.status(201).json(newProject);
   } catch (err) {
@@ -347,6 +408,7 @@ router.put("/:id", upload.array("images", 10), async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project update completed in ${totalTime}ms`);
+    await global.deleteCache('projects'); // ADD THIS LINE
 
     res.json(project);
   } catch (err) {
@@ -393,6 +455,7 @@ router.delete("/:id", async (req, res) => {
 
     const totalTime = Date.now() - startTime;
     console.log(`Project deletion completed in ${totalTime}ms`);
+    await global.deleteCache('projects'); // ADD THIS LINE
 
     res.json({ message: "Project deleted successfully" });
   } catch (err) {
