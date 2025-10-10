@@ -20,13 +20,13 @@ export default function AdminDashboard() {
   // Helper function
   const toUrl = (p) => {
     if (!p) return null;
-    return p.startsWith("http") ? p : `https://social-marnie-devsam-3696528a.koyeb.app${p}`;
+    return p.startsWith("http") ? p : `https://interior-portfolio-production.up.railway.app${p}`;
   };
 
   // Fetch functions
   const fetchCategories = async () => {
     try {
-      const res = await fetch("https://social-marnie-devsam-3696528a.koyeb.app/api/categories");
+      const res = await fetch("https://interior-portfolio-production.up.railway.app/api/categories");
       const data = await res.json();
       const normalized = data.map(c => ({
         ...c,
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch("https://social-marnie-devsam-3696528a.koyeb.app/api/projects");
+      const res = await fetch("https://interior-portfolio-production.up.railway.app/api/projects");
       const data = await res.json();
 
       const normalized = data.map(p => {
@@ -92,8 +92,8 @@ export default function AdminDashboard() {
       if (categoryForm.cover) formData.append("cover", categoryForm.cover);
 
       const url = categoryForm.id
-        ? `https://social-marnie-devsam-3696528a.koyeb.app/api/categories/${categoryForm.id}`
-        : "https://social-marnie-devsam-3696528a.koyeb.app/api/categories";
+        ? `https://interior-portfolio-production.up.railway.app/api/categories/${categoryForm.id}`
+        : "https://interior-portfolio-production.up.railway.app/api/categories";
 
       const method = categoryForm.id ? "PUT" : "POST";
 
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this category?")) return;
     setLoading(true);
     try {
-      await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/categories/${id}`, { method: "DELETE" });
+      await fetch(`https://interior-portfolio-production.up.railway.app/api/categories/${id}`, { method: "DELETE" });
       await fetchCategories();
     } catch (err) {
       console.error(err);
@@ -154,8 +154,8 @@ export default function AdminDashboard() {
       }
 
       const url = projectForm.id
-        ? `https://social-marnie-devsam-3696528a.koyeb.app/api/projects/${projectForm.id}`
-        : "https://social-marnie-devsam-3696528a.koyeb.app/api/projects";
+        ? `https://interior-portfolio-production.up.railway.app/api/projects/${projectForm.id}`
+        : "https://interior-portfolio-production.up.railway.app/api/projects";
       const method = projectForm.id ? "PUT" : "POST";
 
       const res = await fetch(url, { method, body: formData });
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this project?")) return;
     setLoading(true);
     try {
-      await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/projects/${id}`, { method: "DELETE" });
+      await fetch(`https://interior-portfolio-production.up.railway.app/api/projects/${id}`, { method: "DELETE" });
       await fetchProjects();
     } catch (err) {
       console.error(err);
@@ -208,7 +208,7 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       if (img.id) {
-        const res = await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/projects/image/${img.id}`, { method: "DELETE" });
+        const res = await fetch(`https://interior-portfolio-production.up.railway.app/api/projects/image/${img.id}`, { method: "DELETE" });
         if (!res.ok) throw new Error("Server failed to delete image");
       }
 

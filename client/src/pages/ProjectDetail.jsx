@@ -15,7 +15,7 @@ export default function ProjectDetail() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`https://social-marnie-devsam-3696528a.koyeb.app/api/projects/${id}`);
+        const res = await fetch(`https://interior-portfolio-production.up.railway.app/api/projects/${id}`);
         if (!res.ok) throw new Error("Failed to fetch project");
         const data = await res.json();
         setProject(data);
