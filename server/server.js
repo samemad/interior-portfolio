@@ -72,10 +72,10 @@ app.use(express.json());
 
 // CORS configuration - allow only your GitHub Pages origin
 app.use(cors({
-  origin: 'https://samemad.github.io',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Add all methods
+  origin: ['https://samemad.github.io', 'https://interior-portfolio-1ji.pages.dev'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Add this if you're sending cookies/auth headers
+  credentials: true
 }));
 
 // Health check route with performance info
