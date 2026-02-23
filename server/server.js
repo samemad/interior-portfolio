@@ -78,6 +78,8 @@ app.use(cors({
   credentials: true
 }));
 
+
+
 // Health check route with performance info
 app.get("/", (req, res) => {
   res.json({ 
