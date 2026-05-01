@@ -46,7 +46,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-purple-300/20">
+    <header className="sticky top-0 z-50 border-b border-luxuryLine/70 bg-white/78 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo/Home */}
         <button
@@ -54,22 +54,22 @@ export default function Navbar() {
           className="font-display text-xl tracking-wide text-left group"
           aria-label="Go to home"
         >
-          <span className="text-purple-400 group-hover:text-pink-400 transition-colors duration-300">A.</span> 
-          <span className="text-white group-hover:text-purple-200 transition-colors duration-300">Interiors</span>
+          <span className="text-[#8b7158] group-hover:text-luxuryInk transition-colors duration-300">A.</span> 
+          <span className="text-luxuryInk group-hover:text-[#8b7158] transition-colors duration-300">Interiors</span>
         </button>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-6 text-sm items-center">
           <button
             onClick={handleHomeClick}
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Home
           </button>
 
           <button 
             onClick={() => handleNavClick("categories")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Categories
           </button>
@@ -78,8 +78,8 @@ export default function Navbar() {
             to="/projects" 
             className={({ isActive }) => 
               isActive 
-                ? "text-purple-400 relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-px after:bg-gradient-to-r after:from-purple-400 after:to-pink-400" 
-                : "text-gray-300 hover:text-purple-300 transition-colors duration-300"
+                ? "text-[#8b7158] relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-px after:bg-[#8b7158]" 
+                : "text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
             }
           >
             Projects
@@ -87,14 +87,14 @@ export default function Navbar() {
 
           <button 
             onClick={() => handleNavClick("about")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             About
           </button>
           
           <button 
             onClick={() => handleNavClick("contact")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Contact
           </button>
@@ -103,7 +103,7 @@ export default function Navbar() {
         {/* CV (desktop) */}
         <a
           href="/cv.pdf"
-          className="hidden md:inline text-sm border border-purple-300/30 hover:border-purple-400/60 px-3 py-1.5 rounded-sm text-purple-200 hover:text-white hover:bg-purple-400/10 transition-all duration-300"
+          className="hidden md:inline rounded-full border border-luxuryLine bg-white/55 px-3 py-1.5 text-sm text-luxuryInk hover:border-[#b89b7d] hover:bg-white transition-all duration-300"
           download
         >
           Download CV
@@ -111,7 +111,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-2xl text-purple-300 hover:text-pink-400 transition-colors duration-300"
+          className="md:hidden text-2xl text-luxuryInk hover:text-[#8b7158] transition-colors duration-300"
           onClick={() => setMenuOpen((s) => !s)}
           aria-label="Toggle menu"
         >
@@ -123,7 +123,7 @@ export default function Navbar() {
       <div
         className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
           menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-        } bg-slate-950/95 backdrop-blur-md border-t border-purple-300/20`}
+        } border-t border-luxuryLine/70 bg-white/92 backdrop-blur-md`}
       >
         <nav className="flex flex-col items-center py-4 gap-4">
           <button
@@ -132,14 +132,14 @@ export default function Navbar() {
               setMenuOpen(false);
               handleHomeClick();
             }}
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Home
           </button>
 
           <NavLink 
             to="/projects" 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300" 
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300" 
             onClick={() => setMenuOpen(false)}
           >
             Projects
@@ -147,28 +147,28 @@ export default function Navbar() {
 
           <button 
             onClick={() => handleNavClick("categories")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Categories
           </button>
           
           <button 
             onClick={() => handleNavClick("about")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             About
           </button>
           
           <button 
             onClick={() => handleNavClick("contact")} 
-            className="text-gray-300 hover:text-purple-300 transition-colors duration-300"
+            className="text-luxuryMuted hover:text-luxuryInk transition-colors duration-300"
           >
             Contact
           </button>
 
           <a
             href="/cv.pdf"
-            className="text-sm border border-purple-300/30 hover:border-purple-400/60 px-3 py-1.5 rounded-sm text-purple-200 hover:text-white hover:bg-purple-400/10 transition-all duration-500"
+            className="rounded-full border border-luxuryLine bg-white/55 px-3 py-1.5 text-sm text-luxuryInk hover:border-[#b89b7d] hover:bg-white transition-all duration-500"
             download
             onClick={() => setMenuOpen(false)}
           >

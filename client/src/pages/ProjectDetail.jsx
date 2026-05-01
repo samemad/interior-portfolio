@@ -83,12 +83,12 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-luxuryBg">
         <div className="max-w-5xl mx-auto px-4 pt-20">
           <div className="flex justify-center items-center py-20">
             <div className="relative w-20 h-20">
-              <div className="absolute inset-0 border-2 border-purple-300/20 rounded-full"></div>
-              <div className="absolute inset-0 border-2 border-purple-400 rounded-full border-t-transparent animate-spin"></div>
+              <div className="absolute inset-0 rounded-full border border-luxuryLine"></div>
+              <div className="absolute inset-0 animate-spin rounded-full border-2 border-[#b89b7d] border-t-transparent"></div>
             </div>
           </div>
         </div>
@@ -98,10 +98,10 @@ export default function ProjectDetail() {
 
   if (err) {
     return (
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-luxuryBg">
         <div className="max-w-5xl mx-auto px-4 pt-20">
           <div className="text-center py-20">
-            <p className="text-red-400 bg-red-900/20 backdrop-blur-sm border border-red-500/20 rounded-lg px-6 py-4 inline-block">
+            <p className="inline-block rounded-lg border border-[#d6b7a7] bg-white/80 px-6 py-4 text-[#9a5a42] backdrop-blur-sm">
               {err}
             </p>
           </div>
@@ -112,10 +112,10 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-luxuryBg">
         <div className="max-w-5xl mx-auto px-4 pt-20">
           <div className="text-center py-20">
-            <p className="text-gray-300 text-lg">Project not found.</p>
+            <p className="text-lg text-luxuryMuted">Project not found.</p>
           </div>
         </div>
       </div>
@@ -123,10 +123,8 @@ export default function ProjectDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      {/* Background gradients */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/5 via-transparent to-pink-900/5"></div>
+    <div className="min-h-screen bg-luxuryBg">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(250,250,248,0.96)_45%,_rgba(245,240,232,1)_100%)]"></div>
       
       <div className="relative">
         <section className="max-w-5xl mx-auto px-4 pt-20 pb-16">
@@ -134,7 +132,7 @@ export default function ProjectDetail() {
           <div className="mb-8">
             <Link 
               to="/projects" 
-              className="inline-flex items-center text-purple-300 hover:text-white transition-colors duration-300 group"
+              className="group inline-flex items-center text-[#8b7158] transition-colors duration-300 hover:text-luxuryInk"
             >
               <svg className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
@@ -146,15 +144,15 @@ export default function ProjectDetail() {
           {/* Project Header */}
           <div className="mb-12">
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-light text-white tracking-tight mb-4">
+            <h1 className="mb-4 text-4xl font-light tracking-tight text-luxuryInk md:text-5xl">
               {project.title}
             </h1>
 
             {/* Category */}
             {project.category && (
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-purple-300 text-sm font-light tracking-wide uppercase">
+                <div className="h-2 w-2 rounded-full bg-[#b89b7d]"></div>
+                <span className="text-sm font-light tracking-wide uppercase text-[#8b7158]">
                   {project.category}
                 </span>
               </div>
@@ -163,7 +161,7 @@ export default function ProjectDetail() {
             {/* Description */}
             {project.description && (
               <div className="max-w-3xl">
-                <p className="text-gray-300 text-lg leading-relaxed font-light">
+                <p className="text-lg font-light leading-relaxed text-luxuryMuted">
                   {project.description}
                 </p>
               </div>
@@ -173,11 +171,11 @@ export default function ProjectDetail() {
           {/* Main image */}
           {project.images?.[0] && (
             <div className="relative group mb-8">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 pointer-events-none"></div>
+              <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-[#e8ddd0] blur opacity-40 transition duration-1000 group-hover:opacity-60"></div>
               <img
                 src={project.images[0].path}
                 alt={project.title}
-                className="relative w-full rounded-2xl shadow-2xl cursor-pointer hover:shadow-purple-500/20 transition-all duration-500 border border-purple-300/20 z-10"
+                className="relative z-10 w-full cursor-pointer rounded-2xl border border-luxuryLine shadow-2xl transition-all duration-500 hover:border-[#b89b7d]"
                 onClick={() => openLightbox(0)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
@@ -189,12 +187,12 @@ export default function ProjectDetail() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {project.images.slice(1).map((img, i) => (
                 <div key={i} className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl blur opacity-0 group-hover:opacity-25 transition duration-700"></div>
+                  <div className="absolute -inset-0.5 rounded-xl bg-[#e8ddd0] blur opacity-0 transition duration-700 group-hover:opacity-50"></div>
                   <div className="relative">
                     <img
                       src={img.path}
                       alt={`${project.title}-${i + 2}`}
-                      className="w-full h-48 object-cover rounded-xl border border-purple-300/20 cursor-pointer hover:border-purple-300/40 hover:scale-105 transition-all duration-300"
+                      className="h-48 w-full cursor-pointer rounded-xl border border-luxuryLine object-cover transition-all duration-300 hover:scale-105 hover:border-[#b89b7d]"
                       onClick={() => openLightbox(i + 1)}
                     />
                   </div>
@@ -214,14 +212,14 @@ export default function ProjectDetail() {
           {/* Close button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-4 right-4 text-white/70 hover:text-white text-3xl z-10 p-2 rounded-full hover:bg-purple-500/20 hover:border hover:border-purple-300/30 transition-all duration-300"
+            className="absolute top-4 right-4 z-10 rounded-full border border-white/15 bg-white/10 p-2 text-3xl text-white/70 transition-all duration-300 hover:border-[#d8c4ac] hover:bg-[#d8c4ac]/20 hover:text-white"
             aria-label="Close lightbox"
           >
             ✕
           </button>
 
           {/* Image counter */}
-          <div className="absolute top-4 left-4 text-white/70 text-sm z-10 bg-black/30 backdrop-blur-sm rounded-lg px-3 py-2 border border-purple-300/20">
+          <div className="absolute top-4 left-4 z-10 rounded-lg border border-white/15 bg-black/30 px-3 py-2 text-sm text-white/70 backdrop-blur-sm">
             {currentImageIndex + 1} / {project.images.length}
           </div>
 
@@ -232,7 +230,7 @@ export default function ProjectDetail() {
                 e.stopPropagation();
                 goToPrevious();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-4xl p-3 rounded-full hover:bg-purple-500/20 hover:border hover:border-purple-300/30 transition-all duration-300 z-10"
+              className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/15 bg-white/10 p-3 text-4xl text-white/70 transition-all duration-300 hover:border-[#d8c4ac] hover:bg-[#d8c4ac]/20 hover:text-white"
               aria-label="Previous image"
             >
               ‹
@@ -246,7 +244,7 @@ export default function ProjectDetail() {
                 e.stopPropagation();
                 goToNext();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-4xl p-3 rounded-full hover:bg-purple-500/20 hover:border hover:border-purple-300/30 transition-all duration-300 z-10"
+              className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/15 bg-white/10 p-3 text-4xl text-white/70 transition-all duration-300 hover:border-[#d8c4ac] hover:bg-[#d8c4ac]/20 hover:text-white"
               aria-label="Next image"
             >
               ›
@@ -262,7 +260,7 @@ export default function ProjectDetail() {
           />
 
           {/* Instructions text */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/50 text-sm text-center bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 border border-purple-300/10">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-lg border border-white/10 bg-black/30 px-4 py-2 text-center text-sm text-white/50 backdrop-blur-sm">
             <p className="hidden md:block">Use arrow keys or click buttons to navigate • ESC to close</p>
             <p className="md:hidden">Tap arrows to navigate • Tap outside to close</p>
           </div>
