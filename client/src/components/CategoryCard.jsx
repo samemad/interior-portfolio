@@ -18,19 +18,22 @@ const CategoryCard = ({ item }) => {
     <Link
       to={`/category/${item.id}`}
       ref={ref}
-      className={`min-w-[400px] md:min-w-[450px] lg:min-w-[500px] group relative rounded-2xl overflow-hidden border border-white/5 flex-shrink-0 transition-transform duration-700 ease-out
+      className={`group relative min-w-[280px] flex-shrink-0 overflow-hidden rounded-[1.75rem] border border-luxuryLine bg-white/80 shadow-[0_18px_60px_rgba(121,99,77,0.08)] transition duration-700 ease-out sm:min-w-[340px] lg:min-w-[380px]
         ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
-        hover:scale-105 hover:shadow-2xl`}
+        hover:-translate-y-2 hover:shadow-[0_24px_70px_rgba(121,99,77,0.14)]`}
     >
-      <div
-        className="aspect-[16/10] bg-center bg-cover group-hover:scale-110 transition-transform duration-500"
-        style={{
-          backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-      <div className="absolute bottom-4 left-4">
-        <h3 className="text-base md:text-lg font-medium group-hover:text--purple-600 transition-colors duration-300">
+      <div className="relative">
+        <div
+          className="aspect-[16/11] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+          style={{
+            backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
+          }}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_38%,rgba(47,36,28,0.14)_100%)]" />
+      </div>
+      <div className="absolute inset-x-4 bottom-4 rounded-[1.35rem] border border-white/70 bg-white/82 p-4 backdrop-blur-md">
+        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-luxuryMuted">Category</p>
+        <h3 className="mt-2 font-display text-2xl text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158]">
           {item.name}
         </h3>
       </div>
