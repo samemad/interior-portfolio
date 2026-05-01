@@ -4,17 +4,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        luxuryBg: "#0b0b0f",
-        luxurySurface: "#14141a",
-        luxuryGold: "#d4af37",
-        luxuryMuted: "#9aa0a6",
+        luxuryBg: "#FAFAF8",
+        luxurySurface: "#F5F0E8",
+        luxuryAccent: "#E8DDD0",
+        luxuryLine: "#D6C8B8",
+        luxuryInk: "#2F241C",
+        luxuryMuted: "#7E7266",
       },
       boxShadow: {
-        glow: "0 0 40px rgba(212,175,55,0.15)",
+        glow: "0 24px 80px rgba(120, 97, 74, 0.12)",
       },
       fontFamily: {
-        display: ['"Playfair Display"', "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"],
+        display: ['"Cormorant Garamond"', '"Playfair Display"', "serif"],
+        sans: ['"Manrope"', "system-ui", "sans-serif"],
       },
     },
   },
