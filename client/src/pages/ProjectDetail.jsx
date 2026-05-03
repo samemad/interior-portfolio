@@ -258,11 +258,11 @@ export default function ProjectDetail() {
           )}
 
           {/* Main image */}
-          <div className="flex h-full w-full items-center justify-center px-16 py-14">
+          <div className="absolute inset-0 flex items-center justify-center">
             <img
               src={optimizeImageUrl(project.images[currentImageIndex].path)}
               alt={`${project.title}-${currentImageIndex + 1}`}
-              className="h-screen w-screen object-contain shadow-2xl"
+              className="max-w-full max-h-full object-contain"
               onClick={(e) => e.stopPropagation()}
             />
           </div>

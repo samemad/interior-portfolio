@@ -25,6 +25,8 @@ export default function ScrollHero() {
   // Derive the best displayable frame: walk backwards from activeFrame until
   // we find one that has already been loaded.
   const [displayFrame, setDisplayFrame] = useState(0);
+  const targetFrameRef = useRef(0);
+  const smoothedFrameRef = useRef(0);
 
   useEffect(() => {
     let isCancelled = false;
@@ -73,24 +75,41 @@ export default function ScrollHero() {
       loadBatch(0);
     });
 
+    let animationFrameId = null;
+    const animateFrame = () => {
+      if (isCancelled) return;
+      const delta = targetFrameRef.current - smoothedFrameRef.current;
+      smoothedFrameRef.current += delta * 0.2;
+
+      const nextFrame = Math.min(
+        TOTAL_FRAMES - 1,
+        Math.max(0, Math.round(smoothedFrameRef.current))
+      );
+
+      startTransition(() => {
+        setActiveFrame((currentFrame) =>
+          currentFrame === nextFrame ? currentFrame : nextFrame
+        );
+      });
+
+      animationFrameId = window.requestAnimationFrame(animateFrame);
+    };
+
     const updateFromScroll = () => {
       const sectionScrollable = Math.max(window.innerHeight * 4, 1);
       const pageScroll = window.scrollY;
       const progress = clamp(pageScroll / sectionScrollable);
       const nextFrame = Math.min(
         TOTAL_FRAMES - 1,
-        Math.max(0, Math.round(progress * (TOTAL_FRAMES - 1)))
+        Math.max(0, progress * (TOTAL_FRAMES - 1))
       );
 
       setScrollProgress(progress);
-      startTransition(() => {
-        setActiveFrame((currentFrame) =>
-          currentFrame === nextFrame ? currentFrame : nextFrame
-        );
-      });
+      targetFrameRef.current = nextFrame;
     };
 
     updateFromScroll();
+    animationFrameId = window.requestAnimationFrame(animateFrame);
 
     let ticking = false;
     const handleScroll = () => {
@@ -108,6 +127,9 @@ export default function ScrollHero() {
 
     return () => {
       isCancelled = true;
+      if (animationFrameId) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
