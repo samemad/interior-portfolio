@@ -225,7 +225,10 @@ export default function ProjectDetail() {
           </button>
 
           {/* Image counter */}
-          <div className="absolute top-4 left-4 z-10 rounded-lg border border-white/15 bg-black/30 px-3 py-2 text-sm text-white/70 backdrop-blur-sm">
+          <div
+            className="absolute top-4 left-4 z-10 rounded-lg border border-white/15 bg-black/30 px-3 py-2 text-sm text-white/70 backdrop-blur-sm"
+            aria-live="polite"
+          >
             {currentImageIndex + 1} / {project.images.length}
           </div>
 
