@@ -1,13 +1,12 @@
 import { startTransition, useEffect, useRef, useState } from "react";
 
-const TOTAL_FRAMES = 30;
+const TOTAL_FRAMES = 70;
 const CRITICAL_FRAMES = 10;
 const BATCH_SIZE = 10;
 const BATCH_DELAY_MS = 100;
 
 const FRAME_PATHS = Array.from({ length: TOTAL_FRAMES }, (_, index) => {
-  // Select odd-numbered frames: 001, 003, 005 … 059 (30 frames total)
-  const frameNumber = String(index * 2 + 1).padStart(3, "0");
+  const frameNumber = String(index + 1).padStart(3, "0");
   return `${import.meta.env.BASE_URL}frames/ezgif-frame-${frameNumber}.webp`;
 });
 

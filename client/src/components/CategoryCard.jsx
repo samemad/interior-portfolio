@@ -2,6 +2,11 @@
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 
+const optimizeImageUrl = (url) => {
+  if (!url || !url.includes("cloudinary.com")) return url;
+  return url.includes("?") ? url : `${url}?w=800&q=auto&f=auto`;
+};
+
 const CategoryCard = ({ item }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -11,7 +16,8 @@ const CategoryCard = ({ item }) => {
   // helper: handle both relative and full URLs
   const toUrl = (p) => {
     if (!p) return null;
-    return p.startsWith("http") ? p : `https://interior-portfolio-production.up.railway.app${p}`;
+    const resolved = p.startsWith("http") ? p : `https://interior-portfolio-production.up.railway.app${p}`;
+    return optimizeImageUrl(resolved);
   };
 
   return (
@@ -29,11 +35,11 @@ const CategoryCard = ({ item }) => {
             backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_38%,rgba(47,36,28,0.14)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_30%,rgba(22,15,10,0.35)_68%,rgba(16,10,7,0.72)_100%)]" />
       </div>
-      <div className="absolute inset-x-4 bottom-4 rounded-[1.35rem] border border-white/70 bg-white/82 p-4 backdrop-blur-md">
-        <p className="text-[0.68rem] uppercase tracking-[0.28em] text-luxuryMuted">Category</p>
-        <h3 className="mt-2 font-display text-2xl text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158]">
+      <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-white/70 bg-white/86 px-5 py-4 backdrop-blur-md">
+        <p className="text-[0.72rem] uppercase tracking-[0.28em] text-luxuryMuted">Category</p>
+        <h3 className="mt-2 line-clamp-2 font-display text-2xl leading-tight text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158] sm:text-[2rem]">
           {item.name}
         </h3>
       </div>
