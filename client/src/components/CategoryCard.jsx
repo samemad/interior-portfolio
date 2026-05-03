@@ -38,6 +38,9 @@ const CategoryCard = ({ item }) => {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_62%,rgba(0,0,0,0.08)_100%)]" />
       </div>
       <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-luxuryLine bg-white/90 px-5 py-4">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_30%,rgba(22,15,10,0.35)_68%,rgba(16,10,7,0.72)_100%)]" />
+      </div>
+      <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-white/70 bg-white/86 px-5 py-4 backdrop-blur-md">
         <p className="text-[0.72rem] uppercase tracking-[0.28em] text-luxuryMuted">Category</p>
         <h3 className="mt-2 line-clamp-2 font-display text-2xl leading-tight text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158] sm:text-[2rem]">
           {item.name}
