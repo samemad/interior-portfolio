@@ -30,16 +30,15 @@ const CategoryCard = ({ item }) => {
     >
       <div className="relative">
         <div
-          className="aspect-[16/11] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+          className="aspect-[4/3] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
           style={{
             backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_78%,rgba(0,0,0,0.03)_100%)]" />
       </div>
-      <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-luxuryLine bg-white px-5 py-4 shadow-[0_10px_24px_rgba(0,0,0,0.08)]">
-        <p className="text-[0.72rem] uppercase tracking-[0.28em] text-luxuryMuted">Category</p>
-        <h3 className="mt-2 line-clamp-2 font-display text-2xl leading-tight text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158] sm:text-[2rem]">
+      <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/80 px-4 py-2 backdrop-blur-sm">
+        <p className="text-[0.6rem] uppercase tracking-widest text-luxuryMuted">Category</p>
+        <h3 className="mt-1 font-display text-lg text-luxuryInk transition-colors duration-300 group-hover:text-[#8b7158]">
           {item.name}
         </h3>
       </div>
