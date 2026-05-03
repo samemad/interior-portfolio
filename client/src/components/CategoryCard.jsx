@@ -35,6 +35,9 @@ const CategoryCard = ({ item }) => {
             backgroundImage: `url(${item.cover_image ? toUrl(item.cover_image) : "/placeholder.jpg"})`,
           }}
         />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_62%,rgba(0,0,0,0.08)_100%)]" />
+      </div>
+      <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-luxuryLine bg-white/90 px-5 py-4">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_30%,rgba(22,15,10,0.35)_68%,rgba(16,10,7,0.72)_100%)]" />
       </div>
       <div className="absolute inset-x-4 bottom-4 min-h-[132px] rounded-[1.35rem] border border-white/70 bg-white/86 px-5 py-4 backdrop-blur-md">
