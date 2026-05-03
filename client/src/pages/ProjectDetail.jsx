@@ -262,7 +262,7 @@ export default function ProjectDetail() {
             <img
               src={optimizeImageUrl(project.images[currentImageIndex].path)}
               alt={`${project.title}-${currentImageIndex + 1}`}
-              className="max-w-[95vw] max-h-[95vh] object-contain shadow-2xl"
+              className="h-screen w-screen object-contain shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
